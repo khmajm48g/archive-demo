@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>بيانات القائمة</title>
+
+<style>
+
+body{
+    font-family:Tahoma,Arial;
+    background:#f4f7fc;
+    padding:30px;
+}
+
+.card{
+
+    max-width:800px;
+    margin:auto;
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:30px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+
+}
+
+h1{
+    color:#1e3a8a;
+    text-align:center;
+}
+
+.item{
+    margin:15px 0;
+    font-size:18px;
+}
+
+.btn{
+
+    display:inline-block;
+
+    margin-top:20px;
+
+    padding:12px 20px;
+
+    background:#2563eb;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>📋 بيانات القائمة</h1>
+
+<div id="content"></div>
+
+</div>
+
+<script>
+
+const lists = {
+
+"001-2024": {
+
+branch:"الإدارة العامة",
+
+count:"102",
+
+total:"197,536",
+
+date:"06-03-2024",
+
+reference:"ر.ص.ع / 001 / 2024",
+
+pdf:"pdf/001-2024.pdf"
+
+},
+
+"002-2024": {
+
+branch:"الإدارة العامة",
+
+count:"72",
+
+total:"119,560",
+
+date:"12-05-2024",
+
+reference:"ر.ص.ع / 002 / 2024",
+
+pdf:"pdf/002-2024.pdf"
+
+},
+
+"003-2024": {
+
+branch:"الإدارة العامة",
+
+count:"70",
+
+total:"142,802",
+
+date:"10-06-2024",
+
+reference:"ر.ص.ع / 003 / 2024",
+
+pdf:"pdf/003-2024.pdf"
+
+}
+
+};
+
+const params = new URLSearchParams(window.location.search);
+
+const id = params.get("id");
+
+const list = lists[id];
+
+const content = document.getElementById("content");
+
+if(list){
+
+content.innerHTML = `
+
+<div class="item"><b>🆔 رقم القائمة:</b> ${id}</div>
+
+<div class="item"><b>🏢 الفرع:</b> ${list.branch}</div>
+
+<div class="item"><b>📦 عدد المعاملات:</b> ${list.count}</div>
+
+<div class="item"><b>💰 إجمالي القيمة:</b> ${list.total} د.ل</div>
+
+<div class="item"><b>📅 تاريخ الصرف:</b> ${list.date}</div>
+
+<div class="item"><b>📝 الرقم الإشاري:</b> ${list.reference}</div>
+
+<a class="btn" href="${list.pdf}" target="_blank">
+
+📄 فتح القائمة PDF
+
+</a>
+
+`;
+
+}else{
+
+content.innerHTML = "القائمة غير موجودة";
+
+}
+
+</script>
+
+</body>
+</html>
