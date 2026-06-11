@@ -102,8 +102,9 @@ searchInput.addEventListener('input', function() {
     if(keyword === '') return;
 
     const results = employees.filter(emp =>
-        emp.name.includes(keyword) ||
-        emp.employee_id.includes(keyword)
+      emp.name.includes(keyword) ||
+emp.employee_id.includes(keyword) ||
+emp.list_no.includes(keyword)
     );
 
     results.forEach(emp => {
