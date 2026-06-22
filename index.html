@@ -73,63 +73,77 @@ input{
 <input
 type="text"
 id="search"
-placeholder="اكتب الاسم أو الرقم أو رقم القائمة ثم اضغط Enter">
+placeholder="ابحث بالاسم أو الرقم الوظيفي">
 </div>
 
 <div id="results"></div>
 
 </div>
 
+
 <script>
-
 let employees = [];
-
-fetch('employees.json')
-.then(response => response.json())
-.then(data => {
-    employees = data;
-});
+let loaded = false;
 
 const searchInput = document.getElementById('search');
 const resultsDiv = document.getElementById('results');
 
-function runSearch(){
-    const keyword=searchInput.value.trim();
-    resultsDiv.innerHTML='';
-    if(!employees.length){resultsDiv.innerHTML='<div class="result">جاري تحميل البيانات...</div>';return;}
-    if(keyword==='') return;
-    const kw=keyword.toLowerCase();
-    const results=employees.filter(emp=>
-      (emp.name||'').toLowerCase().includes(kw)||
-      (emp.employee_id||'').includes(keyword)||
-      (emp.list_no||'').includes(keyword)
-    ).slice(0,100);
-    if(results.length===0){resultsDiv.innerHTML='<div class="result">لا توجد نتائج.</div>';return;}
-    let html='';
-    for(const emp of results){
-      html+=`
-      <div class="result">
+fetch('employees.json')
+.then(r=>r.json())
+.then(data=>{
+  employees=data;
+  loaded=true;
+})
+.catch(()=>{
+  resultsDiv.innerHTML='<div class="result">تعذر تحميل البيانات.</div>';
+});
+
+function render(results){
+  if(results.length===0){
+    resultsDiv.innerHTML='<div class="result">لا توجد نتائج.</div>';
+    return;
+  }
+  let html='';
+  for(const emp of results){
+    html += `
+    <div class="result">
       <p><strong>الرقم الوظيفي:</strong> ${emp.employee_id}</p>
       <p><strong>الاسم:</strong> ${emp.name}</p>
       <p><strong>القيمة:</strong> ${String(emp.value).replace(/\.0$/,'')} د.ل</p>
       <p><strong>رقم القائمة:</strong>
       <a class="list-link" href="list.html?id=${emp.list_no}">${emp.list_no}</a></p>
-      </div>`;
-    }
-    if(results.length===100) html+='<div class="result">تم عرض أول 100 نتيجة فقط.</div>';
-    resultsDiv.innerHTML=html;
+    </div>`;
+  }
+  resultsDiv.innerHTML=html;
 }
-searchInput.addEventListener('keydown',function(e){
- if(e.key==='Enter') runSearch();
-});
-searchInput.addEventListener('keydown',function(e){
- if(e.key==='Escape'){searchInput.value='';resultsDiv.innerHTML='';}
-});
-/*
 
-    });
+function search(){
+  if(!loaded){
+    resultsDiv.innerHTML='<div class="result">جاري تحميل البيانات...</div>';
+    return;
+  }
+  const keyword=searchInput.value.trim();
+  resultsDiv.innerHTML='';
+  if(keyword==='') return;
+  const k=keyword.toLowerCase();
+  const results=employees.filter(emp =>
+    (emp.name||'').toLowerCase().includes(k) ||
+    (emp.employee_id||'').includes(keyword) ||
+    (emp.list_no||'').includes(keyword)
+  ).slice(0,100);
+  render(results);
+}
 
+searchInput.placeholder="اكتب الاسم أو الرقم أو رقم القائمة ثم اضغط Enter";
+searchInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter') search();
+  if(e.key==='Escape'){
+    searchInput.value='';
+    resultsDiv.innerHTML='';
+  }
+});
 </script>
+
 
 </body>
 </html>
