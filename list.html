@@ -16,18 +16,12 @@ body{
 }
 
 .card{
-
     max-width:800px;
     margin:auto;
-
     background:white;
-
     border-radius:15px;
-
     padding:30px;
-
     box-shadow:0 2px 10px rgba(0,0,0,.1);
-
 }
 
 h1{
@@ -41,21 +35,23 @@ h1{
 }
 
 .btn{
-
     display:inline-block;
-
     margin-top:20px;
-
     padding:12px 20px;
-
     background:#2563eb;
-
     color:white;
-
     text-decoration:none;
-
     border-radius:10px;
+}
 
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.error{
+    color:red;
+    text-align:center;
+    font-size:20px;
 }
 
 </style>
@@ -68,89 +64,78 @@ h1{
 
 <h1>📋 بيانات القائمة</h1>
 
-<div id="content"></div>
+<div id="content">
+جاري تحميل البيانات...
+</div>
 
 </div>
 
 <script>
 
-const lists = {
-
-"001-2024": {
-
-branch:"الإدارة العامة",
-
-count:"102",
-
-total:"197,536",
-
-date:"06-03-2024",
-
-reference:"ر.ص.ع / 001 / 2024",
-
-pdf:"pdf/001-2024.pdf"
-
-},
-
-"002-2024": {
-
-branch:"الإدارة العامة",
-
-count:"72",
-
-total:"119,560",
-
-date:"12-05-2024",
-
-reference:"ر.ص.ع / 002 / 2024",
-
-pdf:"pdf/002-2024.pdf"
-
-},
-
-"003-2024": {
-
-branch:"الإدارة العامة",
-
-count:"70",
-
-total:"142,802",
-
-date:"10-06-2024",
-
-reference:"ر.ص.ع / 003 / 2024",
-
-pdf:"pdf/003-2024.pdf"
-
-}
-
-};
-
 const params = new URLSearchParams(window.location.search);
 
-const id = params.get("id");
-
-const list = lists[id];
+const branch = params.get("branch");
+const listNo = params.get("list");
 
 const content = document.getElementById("content");
 
-if(list){
+fetch("lists.json")
+.then(response => response.json())
+.then(lists => {
+
+const list = lists.find(item =>
+item.branch === branch &&
+item.list_no === listNo
+);
+
+if(!list){
+
+content.innerHTML =
+'<div class="error">القائمة غير موجودة</div>';
+
+return;
+
+}
+
+const pdfPath =
+`pdf/${list.branch}/${list.list_no}.pdf`;
 
 content.innerHTML = `
 
-<div class="item"><b>🆔 رقم القائمة:</b> ${id}</div>
+<div class="item">
+<b>🆔 رقم القائمة:</b>
+${list.list_no}
+</div>
 
-<div class="item"><b>🏢 الفرع:</b> ${list.branch}</div>
+<div class="item">
+<b>🏢 الفرع:</b>
+${list.branch}
+</div>
 
-<div class="item"><b>📦 عدد المعاملات:</b> ${list.count}</div>
+<div class="item">
+<b>📦 عدد المعاملات:</b>
+${list.count}
+</div>
 
-<div class="item"><b>💰 إجمالي القيمة:</b> ${list.total} د.ل</div>
+<div class="item">
+<b>💰 إجمالي القيمة:</b>
+${list.total} د.ل
+</div>
 
-<div class="item"><b>📅 تاريخ الصرف:</b> ${list.date}</div>
+<div class="item">
+<b>📅 تاريخ الصرف:</b>
+${list.date}
+</div>
 
-<div class="item"><b>📝 الرقم الإشاري:</b> ${list.reference}</div>
+<div class="item">
+<b>📝 الرقم الإشاري:</b>
+${list.reference}
+</div>
 
-<a class="btn" href="${list.pdf}" target="_blank">
+<a
+class="btn"
+href="${pdfPath}"
+target="_blank">
 
 📄 فتح القائمة PDF
 
@@ -158,11 +143,15 @@ content.innerHTML = `
 
 `;
 
-}else{
+})
+.catch(error=>{
 
-content.innerHTML = "القائمة غير موجودة";
+console.error(error);
 
-}
+content.innerHTML =
+'<div class="error">تعذر تحميل بيانات القائمة</div>';
+
+});
 
 </script>
 
