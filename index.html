@@ -9,7 +9,7 @@
 <style>
 
 body{
-    font-family: Tahoma, Arial;
+    font-family:Tahoma,Arial;
     background:#f4f7fc;
     margin:0;
     padding:30px;
@@ -73,15 +73,15 @@ input{
 <input
 type="text"
 id="search"
-placeholder="ابحث بالاسم أو الرقم الوظيفي">
+placeholder="اكتب الاسم أو الرقم أو رقم القائمة ثم اضغط Enter">
 </div>
 
 <div id="results"></div>
 
 </div>
 
-
 <script>
+
 let employees = [];
 let loaded = false;
 
@@ -89,60 +89,122 @@ const searchInput = document.getElementById('search');
 const resultsDiv = document.getElementById('results');
 
 fetch('employees.json')
-.then(r=>r.json())
-.then(data=>{
-  employees=data;
-  loaded=true;
+.then(response => response.json())
+.then(data => {
+
+    employees = data;
+    loaded = true;
+
 })
-.catch(()=>{
-  resultsDiv.innerHTML='<div class="result">تعذر تحميل البيانات.</div>';
+.catch(() => {
+
+    resultsDiv.innerHTML =
+    '<div class="result">تعذر تحميل البيانات.</div>';
+
 });
 
 function render(results){
-  if(results.length===0){
-    resultsDiv.innerHTML='<div class="result">لا توجد نتائج.</div>';
-    return;
-  }
-  let html='';
-  for(const emp of results){
-    html += `
-    <div class="result">
-      <p><strong>الرقم الوظيفي:</strong> ${emp.employee_id}</p>
-      <p><strong>الاسم:</strong> ${emp.name}</p>
-      <p><strong>القيمة:</strong> ${String(emp.value).replace(/\.0$/,'')} د.ل</p>
-      <p><strong>رقم القائمة:</strong>
-<a class="list-link" href="list.html?branch=${encodeURIComponent(emp.branch)}&list=${encodeURIComponent(emp.list_no)}">${emp.list_no}</a></p>    </div>`;
-  }
-  resultsDiv.innerHTML=html;
+
+    if(results.length === 0){
+
+        resultsDiv.innerHTML =
+        '<div class="result">لا توجد نتائج.</div>';
+
+        return;
+    }
+
+    let html = '';
+
+    for(const emp of results){
+
+        html += `
+
+        <div class="result">
+
+            <p><strong>الرقم الوظيفي:</strong> ${emp.employee_id}</p>
+
+            <p><strong>الاسم:</strong> ${emp.name}</p>
+
+            <p><strong>القيمة:</strong> ${String(emp.value).replace(/\.0$/,'')} د.ل</p>
+
+            <p>
+
+                <strong>رقم القائمة:</strong>
+
+                <a class="list-link"
+                href="list.html?branch=${encodeURIComponent(emp.branch)}&list=${encodeURIComponent(emp.list_no)}">
+
+                ${emp.list_no}
+
+                </a>
+
+            </p>
+
+        </div>
+
+        `;
+
+    }
+
+    resultsDiv.innerHTML = html;
+
 }
 
 function search(){
-  if(!loaded){
-    resultsDiv.innerHTML='<div class="result">جاري تحميل البيانات...</div>';
-    return;
-  }
-  const keyword=searchInput.value.trim();
-  resultsDiv.innerHTML='';
-  if(keyword==='') return;
-  const k=keyword.toLowerCase();
-  const results=employees.filter(emp =>
-    (emp.name||'').toLowerCase().includes(k) ||
-    (emp.employee_id||'').includes(keyword) ||
-    (emp.list_no||'').includes(keyword)
-  ).slice(0,100);
-  render(results);
+
+    if(!loaded){
+
+        resultsDiv.innerHTML =
+        '<div class="result">جاري تحميل البيانات...</div>';
+
+        return;
+
+    }
+
+    const keyword = searchInput.value.trim();
+
+    if(keyword === ''){
+
+        resultsDiv.innerHTML = '';
+        return;
+
+    }
+
+    const k = keyword.toLowerCase();
+
+    const results = employees.filter(emp =>
+
+        (emp.name || '').toLowerCase().includes(k) ||
+
+        (emp.employee_id || '').includes(keyword) ||
+
+        (emp.list_no || '').includes(keyword)
+
+    ).slice(0,100);
+
+    render(results);
+
 }
 
-searchInput.placeholder="اكتب الاسم أو الرقم أو رقم القائمة ثم اضغط Enter";
-searchInput.addEventListener('keydown',e=>{
-  if(e.key==='Enter') search();
-  if(e.key==='Escape'){
-    searchInput.value='';
-    resultsDiv.innerHTML='';
-  }
-});
-</script>
+searchInput.addEventListener('keydown',function(e){
 
+    if(e.key === 'Enter'){
+
+        search();
+
+    }
+
+    if(e.key === 'Escape'){
+
+        searchInput.value='';
+
+        resultsDiv.innerHTML='';
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>
