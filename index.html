@@ -111,8 +111,7 @@ function render(results){
       <p><strong>الاسم:</strong> ${emp.name}</p>
       <p><strong>القيمة:</strong> ${String(emp.value).replace(/\.0$/,'')} د.ل</p>
       <p><strong>رقم القائمة:</strong>
-      <a class="list-link" href="list.html?id=${emp.list_no}">${emp.list_no}</a></p>
-    </div>`;
+<a class="list-link" href="list.html?branch=${encodeURIComponent(emp.branch)}&list=${encodeURIComponent(emp.list_no)}">${emp.list_no}</a></p>    </div>`;
   }
   resultsDiv.innerHTML=html;
 }
