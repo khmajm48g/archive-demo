@@ -1200,7 +1200,7 @@
         <div class="header-text">
           <p class="header-eyebrow">
             <i class="fas fa-circle"></i>
-            نظام حكومي رسمي — نسخة إنتاج
+            نظام داخلي خاص بلجنة الرعاية الصحية
           </p>
           <h1 class="header-title">
             منظومة <span>الاستدلال السريع</span>
@@ -1695,15 +1695,19 @@
 
     /* ── Header stats ── */
 
-    updateStats(employees) {
-      const totalEmployees = employees.length;
-      const totalBranches  = new Set(employees.map(e => e.branch)).size;
-      const totalLists     = new Set(employees.map(e => `${e.branch}||${e.list_no}`)).size;
+updateStats(employees) {
 
-      DOM.statEmployees.textContent = totalEmployees.toLocaleString('ar-EG');
-      DOM.statBranches.textContent  = totalBranches.toLocaleString('ar-EG');
-      DOM.statLists.textContent     = totalLists.toLocaleString('ar-EG');
-    },
+  const totalEmployees = employees.length;
+  const totalBranches  = new Set(employees.map(e => e.branch)).size;
+  const totalLists     = new Set(employees.map(e => `${e.branch}||${e.list_no}`)).size;
+
+  console.log([...new Set(employees.map(e => e.branch))].sort());
+
+  DOM.statEmployees.textContent = totalEmployees.toLocaleString('ar-EG');
+  DOM.statBranches.textContent  = totalBranches.toLocaleString('ar-EG');
+  DOM.statLists.textContent     = totalLists.toLocaleString('ar-EG');
+
+},
 
   };
 
