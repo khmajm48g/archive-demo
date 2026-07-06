@@ -1,223 +1,1899 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+  ============================================================
+    RAPID RETRIEVAL SYSTEM - منظومة الاستدلال السريع
+    Version     : 2.0
+    Developer   : محمد خماج
+    Architecture: Static / GitHub Pages / JSON-Driven
+    Last Update : 2026
+  ============================================================
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="منظومة البحث والاستدلال على القوائم والمعاملات المؤرشفة" />
+  <meta name="theme-color" content="#1E40AF" />
+  <title>منظومة الاستدلال السريع</title>
 
-<title>منظومة الاستدلال السريع</title>
+  <!-- ─── Google Fonts ─── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
 
-<style>
+  <!-- ─── Font Awesome 6 ─── -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plh7eecDAmdaUN9Vm9A83oeN6egU8w=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 
-body{
-    font-family:Tahoma,Arial;
-    background:#f4f7fc;
-    margin:0;
-    padding:30px;
-}
+  <style>
+    /* ============================================================
+       SECTION 1 — CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+       ============================================================ */
+    :root {
+      /* Brand Colors */
+      --color-primary        : #1E40AF;
+      --color-primary-dark   : #1a3794;
+      --color-primary-light  : #3b5fd4;
+      --color-secondary      : #2563EB;
+      --color-accent         : #0ea5e9;
+      --color-success        : #059669;
+      --color-warning        : #d97706;
 
-.container{
-    max-width:1000px;
-    margin:auto;
-}
+      /* Neutrals */
+      --color-bg             : #F4F7FC;
+      --color-surface        : #FFFFFF;
+      --color-border         : rgba(30, 64, 175, 0.12);
+      --color-text-primary   : #0f172a;
+      --color-text-secondary : #475569;
+      --color-text-muted     : #94a3b8;
+      --color-text-inverse   : #FFFFFF;
 
-h1{
-    text-align:center;
-    color:#1e3a8a;
-}
+      /* Gradients */
+      --gradient-header  : linear-gradient(135deg, #0f172a 0%, #1e3a8a 45%, #1E40AF 75%, #2563EB 100%);
+      --gradient-card    : linear-gradient(145deg, rgba(255,255,255,0.95), rgba(244,247,252,0.9));
+      --gradient-btn     : linear-gradient(135deg, #2563EB 0%, #1E40AF 100%);
+      --gradient-badge   : linear-gradient(135deg, #dbeafe, #eff6ff);
+      --gradient-bg      : linear-gradient(160deg, #eef2ff 0%, #F4F7FC 40%, #e0f2fe 100%);
 
-.search-box{
-    text-align:center;
-    margin:30px 0;
-}
+      /* Spacing */
+      --space-xs  : 4px;
+      --space-sm  : 8px;
+      --space-md  : 16px;
+      --space-lg  : 24px;
+      --space-xl  : 32px;
+      --space-2xl : 48px;
+      --space-3xl : 64px;
 
-input{
-    width:90%;
-    max-width:700px;
-    padding:15px;
-    border-radius:12px;
-    border:1px solid #ccc;
-    font-size:18px;
-}
+      /* Border Radius */
+      --radius-sm  : 8px;
+      --radius-md  : 12px;
+      --radius-lg  : 20px;
+      --radius-xl  : 28px;
+      --radius-full: 999px;
 
-.result{
-    background:white;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
+      /* Shadows */
+      --shadow-xs  : 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-sm  : 0 4px 6px rgba(0,0,0,.05), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-md  : 0 10px 25px rgba(30,64,175,.10), 0 4px 10px rgba(0,0,0,.06);
+      --shadow-lg  : 0 20px 40px rgba(30,64,175,.14), 0 8px 16px rgba(0,0,0,.08);
+      --shadow-xl  : 0 30px 60px rgba(30,64,175,.18), 0 12px 24px rgba(0,0,0,.10);
+      --shadow-card: 0 8px 32px rgba(30,64,175,.08), 0 2px 8px rgba(0,0,0,.05);
 
-.list-link{
-    color:#2563eb;
-    font-weight:bold;
-    text-decoration:none;
-}
+      /* Glassmorphism */
+      --glass-bg    : rgba(255,255,255,0.72);
+      --glass-border: rgba(255,255,255,0.55);
+      --glass-blur  : blur(18px);
 
-.list-link:hover{
-    text-decoration:underline;
-}
+      /* Typography */
+      --font-family  : 'Cairo', 'Segoe UI', system-ui, sans-serif;
+      --font-size-xs : 0.75rem;
+      --font-size-sm : 0.875rem;
+      --font-size-md : 1rem;
+      --font-size-lg : 1.125rem;
+      --font-size-xl : 1.25rem;
+      --font-size-2xl: 1.5rem;
+      --font-size-3xl: 2rem;
+      --font-size-4xl: 2.5rem;
 
-.footer{
-    margin-top:50px;
-    text-align:center;
-    color:#666;
-    font-size:15px;
-    border-top:1px solid #ddd;
-    padding-top:15px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>
-🏛️ منظومة الاستدلال السريع على القوائم والمعاملات المؤرشفة
-</h1>
-
-<div class="search-box">
-<input
-type="text"
-id="search"
-placeholder="اكتب الاسم أو الرقم أو رقم القائمة ثم اضغط Enter">
-</div>
-
-<div id="results"></div>
-
-</div>
-
-<div class="footer">
-© 2026 جميع الحقوق محفوظة | تطوير وتصميم: محمد خماج
-</div>
-
-<script>
-
-let employees = [];
-let loaded = false;
-
-const searchInput = document.getElementById('search');
-const resultsDiv = document.getElementById('results');
-
-fetch('employees.json')
-.then(response => response.json())
-.then(data => {
-
-    employees = data;
-    loaded = true;
-
-})
-.catch(() => {
-
-    resultsDiv.innerHTML =
-    '<div class="result">تعذر تحميل البيانات.</div>';
-
-});
-
-function render(results){
-
-    if(results.length === 0){
-
-        resultsDiv.innerHTML =
-        '<div class="result">لا توجد نتائج.</div>';
-
-        return;
+      /* Transitions */
+      --transition-fast  : 150ms ease;
+      --transition-base  : 280ms cubic-bezier(.4,0,.2,1);
+      --transition-slow  : 450ms cubic-bezier(.4,0,.2,1);
+      --transition-spring: 500ms cubic-bezier(.34,1.56,.64,1);
     }
 
-    let html = '';
+    /* ============================================================
+       SECTION 2 — CSS RESET & BASE STYLES
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    for(const emp of results){
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
 
-        html += `
+    body {
+      font-family    : var(--font-family);
+      font-size      : var(--font-size-md);
+      color          : var(--color-text-primary);
+      background     : var(--gradient-bg);
+      min-height     : 100vh;
+      line-height    : 1.7;
+      overflow-x     : hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        <div class="result">
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar        { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track  { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb  { background: var(--color-secondary); border-radius: var(--radius-full); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
 
-            <p><strong>الرقم الوظيفي:</strong> ${emp.employee_id}</p>
+    /* Selection Color */
+    ::selection {
+      background: rgba(37,99,235,.2);
+      color: var(--color-primary);
+    }
 
-            <p><strong>الاسم:</strong> ${emp.name}</p>
+    /* ============================================================
+       SECTION 3 — ANIMATED BACKGROUND PATTERN
+       ============================================================ */
+    .bg-pattern {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
 
-            <p><strong>القيمة:</strong> ${String(emp.value).replace(/\.0$/,'')} د.ل</p>
+    .bg-pattern::before {
+      content: '';
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,.06) 0%, transparent 70%);
+      top: -200px;
+      right: -200px;
+      animation: floatOrb 18s ease-in-out infinite;
+    }
 
-            <p>
+    .bg-pattern::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(14,165,233,.05) 0%, transparent 70%);
+      bottom: -100px;
+      left: -100px;
+      animation: floatOrb 22s ease-in-out infinite reverse;
+    }
 
-                <strong>رقم القائمة:</strong>
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, -40px) scale(1.05); }
+      66%       { transform: translate(-20px, 20px) scale(.97); }
+    }
 
-                <a class="list-link"
-                href="list.html?branch=${encodeURIComponent(emp.branch)}&list=${encodeURIComponent(emp.list_no)}">
+    /* ============================================================
+       SECTION 4 — LAYOUT WRAPPER
+       ============================================================ */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-                ${emp.list_no}
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
 
-                </a>
+    /* ============================================================
+       SECTION 5 — HEADER
+       ============================================================ */
+    .site-header {
+      background    : var(--gradient-header);
+      position      : relative;
+      overflow      : hidden;
+      padding       : var(--space-2xl) 0;
+      box-shadow    : var(--shadow-xl);
+    }
 
-            </p>
+    /* Decorative lines inside header */
+    .site-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          -45deg,
+          transparent,
+          transparent 40px,
+          rgba(255,255,255,.015) 40px,
+          rgba(255,255,255,.015) 80px
+        );
+      pointer-events: none;
+    }
+
+    /* Glowing circle top-left */
+    .site-header::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,.25) 0%, transparent 70%);
+      top: -150px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+
+    /* Institution logo / icon area */
+    .header-logo {
+      flex-shrink: 0;
+      width: 90px;
+      height: 90px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.15);
+      transition: transform var(--transition-spring);
+    }
+
+    .header-logo:hover { transform: scale(1.06) rotate(-2deg); }
+
+    .header-logo i {
+      font-size: 2.4rem;
+      color: rgba(255,255,255,.95);
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.3));
+    }
+
+    .header-text { flex: 1; }
+
+    .header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.65);
+      margin-bottom: var(--space-sm);
+    }
+
+    .header-eyebrow i {
+      font-size: .65rem;
+      color: var(--color-accent);
+    }
+
+    .header-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900;
+      color: var(--color-text-inverse);
+      line-height: 1.2;
+      letter-spacing: -.01em;
+      text-shadow: 0 2px 20px rgba(0,0,0,.25);
+      margin-bottom: var(--space-sm);
+    }
+
+    .header-title span {
+      background: linear-gradient(135deg, #93c5fd, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-subtitle {
+      font-size: var(--font-size-sm);
+      color: rgba(255,255,255,.72);
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .header-subtitle i { color: var(--color-accent); font-size: .8rem; }
+
+    /* System Status Badge */
+    .header-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-sm);
+      flex-shrink: 0;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-full);
+      background: rgba(5,150,105,.2);
+      border: 1px solid rgba(5,150,105,.4);
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      color: #6ee7b7;
+      letter-spacing: .06em;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6ee7b7;
+      box-shadow: 0 0 0 3px rgba(110,231,183,.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 3px rgba(110,231,183,.3); }
+      50%       { opacity: .75; box-shadow: 0 0 0 6px rgba(110,231,183,.1); }
+    }
+
+    .version-tag {
+      font-size: var(--font-size-xs);
+      color: rgba(255,255,255,.4);
+      font-weight: 500;
+    }
+
+    /* ─── Header Stats Bar ─── */
+    .header-stats {
+      margin-top: var(--space-xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid rgba(255,255,255,.1);
+      display: flex;
+      gap: var(--space-2xl);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .stat-item i {
+      font-size: .9rem;
+      color: rgba(255,255,255,.5);
+    }
+
+    .stat-value {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: var(--font-size-xs);
+      color: rgba(255,255,255,.5);
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       SECTION 6 — MAIN CONTENT AREA
+       ============================================================ */
+    .main-content {
+      flex: 1;
+      padding: var(--space-2xl) 0;
+    }
+
+    /* ============================================================
+       SECTION 7 — SEARCH SECTION
+       ============================================================ */
+    .search-section { margin-bottom: var(--space-xl); }
+
+    .search-card {
+      background   : var(--glass-bg);
+      border       : 1.5px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      padding      : var(--space-xl) var(--space-2xl);
+      box-shadow   : var(--shadow-xl);
+      position     : relative;
+      overflow     : hidden;
+      transition   : box-shadow var(--transition-base);
+    }
+
+    .search-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #1E40AF, #2563EB, #0ea5e9, #2563EB, #1E40AF);
+      background-size: 200% auto;
+      animation: shimmer 4s linear infinite;
+    }
+
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+
+    .search-card:focus-within { box-shadow: var(--shadow-xl), 0 0 0 3px rgba(37,99,235,.15); }
+
+    .search-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: var(--space-md);
+    }
+
+    .search-label i { font-size: .85rem; }
+
+    .search-input-group {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .search-input-icon {
+      position: absolute;
+      right: var(--space-lg);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+      font-size: 1.1rem;
+      pointer-events: none;
+      transition: color var(--transition-base);
+      z-index: 2;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: var(--space-md) var(--space-xl) var(--space-md) var(--space-lg);
+      padding-right: calc(var(--space-lg) + 2rem);
+      font-family: var(--font-family);
+      font-size: var(--font-size-lg);
+      font-weight: 500;
+      color: var(--color-text-primary);
+      background: rgba(255,255,255,.9);
+      border: 2px solid rgba(30,64,175,.12);
+      border-radius: var(--radius-lg);
+      outline: none;
+      transition: all var(--transition-base);
+      direction: rtl;
+    }
+
+    #searchInput::placeholder { color: var(--color-text-muted); font-weight: 400; }
+
+    #searchInput:focus {
+      border-color: var(--color-secondary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.1);
+    }
+
+    #searchInput:focus + .search-input-icon { color: var(--color-secondary); }
+
+    /* Search Button */
+    .btn-search {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl);
+      background: var(--gradient-btn);
+      color: var(--color-text-inverse);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-family);
+      font-size: var(--font-size-md);
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all var(--transition-spring);
+      box-shadow: 0 4px 15px rgba(37,99,235,.4);
+      position: relative;
+      overflow: hidden;
+      min-width: 140px;
+    }
+
+    .btn-search::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background var(--transition-fast);
+    }
+
+    .btn-search:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37,99,235,.5);
+    }
+
+    .btn-search:hover::after { background: rgba(255,255,255,.08); }
+    .btn-search:active        { transform: translateY(0); }
+
+    /* Clear Button */
+    .btn-clear {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: rgba(148,163,184,.12);
+      border: 1.5px solid rgba(148,163,184,.2);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all var(--transition-base);
+      flex-shrink: 0;
+    }
+
+    .btn-clear:hover {
+      background: rgba(239,68,68,.1);
+      border-color: rgba(239,68,68,.3);
+      color: #ef4444;
+    }
+
+    /* Search Hints */
+    .search-hints {
+      display: flex;
+      gap: var(--space-lg);
+      margin-top: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .hint-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    .hint-chip i { color: var(--color-secondary); font-size: .7rem; }
+
+    /* ============================================================
+       SECTION 8 — RESULTS TOOLBAR
+       ============================================================ */
+    .results-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      min-height: 40px;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: all var(--transition-base);
+    }
+
+    .results-toolbar.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .results-count {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-weight: 600;
+    }
+
+    .results-count .count-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 28px;
+      padding: 0 var(--space-sm);
+      background: var(--gradient-btn);
+      color: #fff;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 800;
+    }
+
+    .results-query {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+    }
+
+    .results-query strong {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       SECTION 9 — RESULTS GRID
+       ============================================================ */
+    #resultsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    /* ============================================================
+       SECTION 10 — RESULT CARD
+       ============================================================ */
+    .result-card {
+      background    : var(--color-surface);
+      border        : 1.5px solid var(--color-border);
+      border-radius : var(--radius-lg);
+      overflow      : hidden;
+      box-shadow    : var(--shadow-card);
+      transition    : all var(--transition-spring);
+      display       : flex;
+      flex-direction: column;
+      animation     : cardFadeIn .4s cubic-bezier(.4,0,.2,1) both;
+      position      : relative;
+    }
+
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Staggered animation delays */
+    .result-card:nth-child(1)  { animation-delay:  40ms; }
+    .result-card:nth-child(2)  { animation-delay:  80ms; }
+    .result-card:nth-child(3)  { animation-delay: 120ms; }
+    .result-card:nth-child(4)  { animation-delay: 160ms; }
+    .result-card:nth-child(5)  { animation-delay: 200ms; }
+    .result-card:nth-child(6)  { animation-delay: 240ms; }
+    .result-card:nth-child(7)  { animation-delay: 280ms; }
+    .result-card:nth-child(8)  { animation-delay: 320ms; }
+    .result-card:nth-child(9)  { animation-delay: 360ms; }
+    .result-card:nth-child(10) { animation-delay: 400ms; }
+
+    .result-card:hover {
+      transform  : translateY(-6px);
+      box-shadow : var(--shadow-xl);
+      border-color: rgba(37,99,235,.25);
+    }
+
+    /* Card Accent Line */
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; left: 0;
+      height: 3px;
+      background: var(--gradient-btn);
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+
+    .result-card:hover::before { opacity: 1; }
+
+    /* ─── Card Header ─── */
+    .card-header {
+      display    : flex;
+      align-items: center;
+      gap        : var(--space-md);
+      padding    : var(--space-lg) var(--space-lg) var(--space-md);
+      border-bottom: 1px solid rgba(30,64,175,.06);
+      background : linear-gradient(135deg, rgba(239,246,255,.6), rgba(255,255,255,.4));
+    }
+
+    .card-avatar {
+      width        : 52px;
+      height       : 52px;
+      border-radius: var(--radius-md);
+      background   : linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      display      : flex;
+      align-items  : center;
+      justify-content: center;
+      flex-shrink  : 0;
+      box-shadow   : 0 4px 12px rgba(37,99,235,.3);
+    }
+
+    .card-avatar i { font-size: 1.3rem; color: #fff; }
+
+    .card-title-group { flex: 1; min-width: 0; }
+
+    .card-name {
+      font-size  : var(--font-size-md);
+      font-weight: 800;
+      color      : var(--color-text-primary);
+      white-space: nowrap;
+      overflow   : hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+
+    .card-id {
+      display    : inline-flex;
+      align-items: center;
+      gap        : var(--space-xs);
+      font-size  : var(--font-size-xs);
+      font-weight: 600;
+      color      : var(--color-secondary);
+      margin-top : var(--space-xs);
+    }
+
+    .card-id i { font-size: .65rem; }
+
+    /* ─── Card Body ─── */
+    .card-body {
+      padding: var(--space-md) var(--space-lg);
+      flex   : 1;
+      display: flex;
+      flex-direction: column;
+      gap    : var(--space-sm);
+    }
+
+    .card-field {
+      display    : flex;
+      align-items: center;
+      gap        : var(--space-md);
+      padding    : var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      background : rgba(244,247,252,.7);
+      transition : background var(--transition-fast);
+    }
+
+    .card-field:hover { background: rgba(239,246,255,.9); }
+
+    .field-icon {
+      width         : 32px;
+      height        : 32px;
+      border-radius : var(--radius-sm);
+      display       : flex;
+      align-items   : center;
+      justify-content: center;
+      flex-shrink   : 0;
+      font-size     : .85rem;
+    }
+
+    .field-icon.blue {
+      background: rgba(37,99,235,.1);
+      color: var(--color-secondary);
+    }
+
+    .field-icon.green {
+      background: rgba(5,150,105,.1);
+      color: var(--color-success);
+    }
+
+    .field-icon.amber {
+      background: rgba(217,119,6,.1);
+      color: var(--color-warning);
+    }
+
+    .field-content { flex: 1; min-width: 0; }
+
+    .field-label {
+      font-size  : var(--font-size-xs);
+      font-weight: 600;
+      color      : var(--color-text-muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .field-value {
+      font-size  : var(--font-size-sm);
+      font-weight: 700;
+      color      : var(--color-text-primary);
+      white-space: nowrap;
+      overflow   : hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ─── Card Footer ─── */
+    .card-footer {
+      padding       : var(--space-md) var(--space-lg);
+      border-top    : 1px solid rgba(30,64,175,.06);
+      display       : flex;
+      align-items   : center;
+      justify-content: space-between;
+      gap           : var(--space-md);
+      background    : rgba(248,250,252,.6);
+    }
+
+    .list-badge {
+      display    : inline-flex;
+      align-items: center;
+      gap        : var(--space-sm);
+      padding    : var(--space-xs) var(--space-md);
+      border-radius: var(--radius-full);
+      background : var(--gradient-badge);
+      border     : 1px solid rgba(37,99,235,.15);
+      font-size  : var(--font-size-xs);
+      font-weight: 800;
+      color      : var(--color-primary);
+    }
+
+    .list-badge i { font-size: .65rem; color: var(--color-secondary); }
+
+    /* Open List Button */
+    .btn-open-list {
+      display    : inline-flex;
+      align-items: center;
+      gap        : var(--space-xs);
+      padding    : var(--space-sm) var(--space-md);
+      background : var(--gradient-btn);
+      color      : #fff;
+      border     : none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-family);
+      font-size  : var(--font-size-xs);
+      font-weight: 700;
+      cursor     : pointer;
+      text-decoration: none;
+      transition : all var(--transition-spring);
+      box-shadow : 0 3px 10px rgba(37,99,235,.35);
+      white-space: nowrap;
+    }
+
+    .btn-open-list:hover {
+      transform  : translateY(-2px) scale(1.03);
+      box-shadow : 0 6px 20px rgba(37,99,235,.45);
+    }
+
+    .btn-open-list i { font-size: .75rem; }
+
+    /* ============================================================
+       SECTION 11 — EMPTY / LOADING / ERROR STATES
+       ============================================================ */
+    .state-container {
+      grid-column: 1 / -1;
+      display    : flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding    : var(--space-3xl) var(--space-lg);
+      text-align : center;
+      animation  : cardFadeIn .5s ease both;
+    }
+
+    .state-icon-wrap {
+      width        : 100px;
+      height       : 100px;
+      border-radius: 50%;
+      display      : flex;
+      align-items  : center;
+      justify-content: center;
+      margin-bottom: var(--space-xl);
+      font-size    : 2.5rem;
+    }
+
+    .state-icon-wrap.idle {
+      background: linear-gradient(135deg, rgba(37,99,235,.08), rgba(30,64,175,.05));
+      color: rgba(37,99,235,.4);
+    }
+
+    .state-icon-wrap.loading {
+      background: linear-gradient(135deg, rgba(37,99,235,.08), rgba(14,165,233,.08));
+      color: var(--color-secondary);
+    }
+
+    .state-icon-wrap.no-result {
+      background: linear-gradient(135deg, rgba(217,119,6,.08), rgba(245,158,11,.05));
+      color: var(--color-warning);
+    }
+
+    .state-icon-wrap.error-state {
+      background: linear-gradient(135deg, rgba(239,68,68,.08), rgba(220,38,38,.05));
+      color: #ef4444;
+    }
+
+    .state-title {
+      font-size  : var(--font-size-xl);
+      font-weight: 800;
+      color      : var(--color-text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .state-description {
+      font-size : var(--font-size-sm);
+      color     : var(--color-text-secondary);
+      max-width : 420px;
+      line-height: 1.8;
+    }
+
+    /* Spinner */
+    .spinner {
+      width        : 48px;
+      height       : 48px;
+      border       : 4px solid rgba(37,99,235,.15);
+      border-top   : 4px solid var(--color-secondary);
+      border-radius: 50%;
+      animation    : spin .75s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ============================================================
+       SECTION 12 — FOOTER
+       ============================================================ */
+    .site-footer {
+      background  : var(--gradient-header);
+      padding     : var(--space-xl) 0;
+      position    : relative;
+      overflow    : hidden;
+    }
+
+    .site-footer::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; left: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+    }
+
+    .footer-inner {
+      display       : flex;
+      align-items   : center;
+      justify-content: space-between;
+      gap           : var(--space-lg);
+      flex-wrap     : wrap;
+    }
+
+    .footer-brand {
+      display    : flex;
+      align-items: center;
+      gap        : var(--space-md);
+    }
+
+    .footer-logo-sm {
+      width        : 42px;
+      height       : 42px;
+      border-radius: var(--radius-sm);
+      background   : rgba(255,255,255,.1);
+      border       : 1px solid rgba(255,255,255,.15);
+      display      : flex;
+      align-items  : center;
+      justify-content: center;
+      font-size    : 1rem;
+      color        : rgba(255,255,255,.8);
+    }
+
+    .footer-copy {
+      font-size  : var(--font-size-xs);
+      color      : rgba(255,255,255,.55);
+      line-height: 1.6;
+    }
+
+    .footer-copy strong { color: rgba(255,255,255,.85); font-weight: 700; }
+
+    .footer-dev {
+      display    : flex;
+      align-items: center;
+      gap        : var(--space-md);
+    }
+
+    .dev-info {
+      text-align : left;
+      font-size  : var(--font-size-xs);
+      color      : rgba(255,255,255,.5);
+    }
+
+    .dev-name {
+      display    : flex;
+      align-items: center;
+      gap        : var(--space-xs);
+      font-size  : var(--font-size-sm);
+      font-weight: 700;
+      color      : rgba(255,255,255,.85);
+    }
+
+    .dev-name i { color: var(--color-accent); font-size: .8rem; }
+
+    .version-pill {
+      padding      : 4px 12px;
+      border-radius: var(--radius-full);
+      background   : rgba(255,255,255,.1);
+      border       : 1px solid rgba(255,255,255,.15);
+      font-size    : var(--font-size-xs);
+      font-weight  : 700;
+      color        : rgba(255,255,255,.7);
+      letter-spacing: .08em;
+    }
+
+    /* ============================================================
+       SECTION 13 — TOAST NOTIFICATION
+       ============================================================ */
+    .toast-container {
+      position: fixed;
+      bottom  : var(--space-xl);
+      left    : var(--space-xl);
+      z-index : 9999;
+      display : flex;
+      flex-direction: column;
+      gap     : var(--space-sm);
+    }
+
+    .toast {
+      display      : flex;
+      align-items  : center;
+      gap          : var(--space-md);
+      padding      : var(--space-md) var(--space-lg);
+      background   : var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      border       : 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      box-shadow   : var(--shadow-lg);
+      font-size    : var(--font-size-sm);
+      font-weight  : 600;
+      color        : var(--color-text-primary);
+      min-width    : 280px;
+      animation    : toastSlide .35s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes toastSlide {
+      from { opacity: 0; transform: translateX(-20px) scale(.95); }
+      to   { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    .toast.fade-out {
+      animation: toastFade .3s ease forwards;
+    }
+
+    @keyframes toastFade {
+      to { opacity: 0; transform: translateX(-10px); }
+    }
+
+    .toast i { font-size: 1.1rem; }
+    .toast.success i { color: var(--color-success); }
+    .toast.warning i { color: var(--color-warning); }
+    .toast.error   i { color: #ef4444; }
+    .toast.info    i { color: var(--color-secondary); }
+
+    /* ============================================================
+       SECTION 14 — RESPONSIVE BREAKPOINTS
+       ============================================================ */
+
+    /* ─── Tablet ─── */
+    @media (max-width: 900px) {
+      .header-inner {
+        flex-wrap: wrap;
+      }
+      .header-meta {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      .header-stats {
+        gap: var(--space-xl);
+        flex-wrap: wrap;
+      }
+      #resultsContainer {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+    }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 640px) {
+      .container { padding: 0 var(--space-md); }
+
+      .site-header { padding: var(--space-xl) 0; }
+
+      .header-logo {
+        width: 68px;
+        height: 68px;
+      }
+      .header-logo i { font-size: 1.8rem; }
+
+      .header-stats {
+        gap: var(--space-lg);
+      }
+      .stat-value { font-size: var(--font-size-lg); }
+
+      .search-card {
+        padding: var(--space-lg);
+      }
+      .search-input-group { flex-direction: column; }
+
+      .btn-search {
+        width: 100%;
+        justify-content: center;
+      }
+      .btn-clear { width: 100%; border-radius: var(--radius-md); }
+
+      #resultsContainer {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-brand { flex-direction: column; }
+      .footer-dev   { flex-direction: column; align-items: center; }
+      .dev-info     { text-align: center; }
+
+      .toast-container {
+        left: var(--space-md);
+        right: var(--space-md);
+        bottom: var(--space-md);
+      }
+      .toast { min-width: unset; width: 100%; }
+    }
+
+    /* ─── Large Screens ─── */
+    @media (min-width: 1400px) {
+      .container { max-width: 1380px; }
+      #resultsContainer {
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      }
+    }
+
+    /* ============================================================
+       SECTION 15 — UTILITY CLASSES
+       ============================================================ */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    .hidden { display: none !important; }
+
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     BACKGROUND DECORATIVE LAYER
+     ════════════════════════════════════════════════ -->
+<div class="bg-pattern" aria-hidden="true"></div>
+
+<!-- ════════════════════════════════════════════════
+     PAGE WRAPPER
+     ════════════════════════════════════════════════ -->
+<div class="page-wrapper">
+
+  <!-- ══════════════════════════════════════════════
+       HEADER
+       ══════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container">
+
+      <div class="header-inner">
+
+        <!-- Institution Logo / Icon -->
+        <div class="header-logo" title="منظومة الاستدلال السريع" aria-hidden="true">
+          <i class="fas fa-landmark"></i>
+        </div>
+
+        <!-- Title & Subtitle -->
+        <div class="header-text">
+          <p class="header-eyebrow">
+            <i class="fas fa-circle"></i>
+            نظام حكومي رسمي — نسخة إنتاج
+          </p>
+          <h1 class="header-title">
+            منظومة <span>الاستدلال السريع</span>
+          </h1>
+          <p class="header-subtitle">
+            <i class="fas fa-archive"></i>
+            منظومة البحث والاستدلال على القوائم والمعاملات المؤرشفة
+          </p>
+        </div>
+
+        <!-- Meta / Status -->
+        <div class="header-meta">
+          <div class="status-badge">
+            <span class="status-dot" aria-hidden="true"></span>
+            النظام يعمل
+          </div>
+          <span class="version-tag">Rapid Retrieval System</span>
+        </div>
+
+      </div><!-- /.header-inner -->
+
+      <!-- Stats Bar (populated by JS after data loads) -->
+      <div class="header-stats" id="headerStats" aria-live="polite">
+        <div class="stat-item">
+          <i class="fas fa-users" aria-hidden="true"></i>
+          <div>
+            <div class="stat-value" id="statEmployees">—</div>
+            <div class="stat-label">إجمالي الموظفين</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-code-branch" aria-hidden="true"></i>
+          <div>
+            <div class="stat-value" id="statBranches">—</div>
+            <div class="stat-label">الفروع</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-list-ol" aria-hidden="true"></i>
+          <div>
+            <div class="stat-value" id="statLists">—</div>
+            <div class="stat-label">القوائم المؤرشفة</div>
+          </div>
+        </div>
+      </div><!-- /#headerStats -->
+
+    </div><!-- /.container -->
+  </header><!-- /.site-header -->
+
+  <!-- ══════════════════════════════════════════════
+       MAIN CONTENT
+       ══════════════════════════════════════════════ -->
+  <main class="main-content" role="main" id="main">
+    <div class="container">
+
+      <!-- ── Search Section ── -->
+      <section class="search-section" aria-label="قسم البحث">
+        <div class="search-card" role="search">
+
+          <label class="search-label" for="searchInput">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            البحث في قاعدة البيانات
+          </label>
+
+          <div class="search-input-group">
+
+            <div class="search-input-wrapper">
+              <input
+                type="search"
+                id="searchInput"
+                autocomplete="off"
+                autocorrect="off"
+                spellcheck="false"
+                placeholder="ابحث بالاسم، الرقم الوظيفي، أو رقم القائمة…"
+                aria-label="حقل البحث"
+                aria-describedby="searchHints"
+              />
+              <i class="fas fa-search search-input-icon" aria-hidden="true"></i>
+            </div>
+
+            <button class="btn-search" id="btnSearch" type="button" aria-label="تنفيذ البحث">
+              <i class="fas fa-search" aria-hidden="true"></i>
+              بحث
+            </button>
+
+            <button class="btn-clear" id="btnClear" type="button" title="مسح البحث" aria-label="مسح حقل البحث">
+              <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+
+          </div><!-- /.search-input-group -->
+
+          <div class="search-hints" id="searchHints" aria-label="تلميحات البحث">
+            <span class="hint-chip">
+              <i class="fas fa-circle" aria-hidden="true"></i>
+              البحث بالاسم
+            </span>
+            <span class="hint-chip">
+              <i class="fas fa-circle" aria-hidden="true"></i>
+              الرقم الوظيفي
+            </span>
+            <span class="hint-chip">
+              <i class="fas fa-circle" aria-hidden="true"></i>
+              رقم القائمة
+            </span>
+          </div>
+
+        </div><!-- /.search-card -->
+      </section>
+
+      <!-- ── Results Toolbar ── -->
+      <div class="results-toolbar" id="resultsToolbar" aria-live="polite" aria-atomic="true">
+        <div class="results-count">
+          <span class="count-number" id="resultsCountNum">0</span>
+          <span>نتيجة مطابقة</span>
+        </div>
+        <div class="results-query" id="resultsQueryText"></div>
+      </div>
+
+      <!-- ── Results Container ── -->
+      <div id="resultsContainer" role="region" aria-label="نتائج البحث" aria-live="polite">
+        <!-- Initial idle state -->
+        <div class="state-container" id="idleState">
+          <div class="state-icon-wrap idle" aria-hidden="true">
+            <i class="fas fa-search"></i>
+          </div>
+          <h2 class="state-title">ابدأ البحث</h2>
+          <p class="state-description">
+            أدخل اسم الموظف، الرقم الوظيفي، أو رقم القائمة في حقل البحث أعلاه
+            للحصول على النتائج فورياً.
+          </p>
+        </div>
+      </div><!-- /#resultsContainer -->
+
+    </div><!-- /.container -->
+  </main>
+
+  <!-- ══════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+
+        <div class="footer-brand">
+          <div class="footer-logo-sm" aria-hidden="true">
+            <i class="fas fa-landmark"></i>
+          </div>
+          <div class="footer-copy">
+            <div>
+              <strong>منظومة الاستدلال السريع</strong>
+            </div>
+            <div>© 2026 جميع الحقوق محفوظة</div>
+          </div>
+        </div>
+
+        <div class="footer-dev">
+          <div class="dev-info">
+            <div style="margin-bottom:3px; color:rgba(255,255,255,.4); font-size:.7rem; letter-spacing:.08em;">
+              تطوير وتصميم
+            </div>
+            <div class="dev-name">
+              <i class="fas fa-code" aria-hidden="true"></i>
+              محمد خماج
+            </div>
+          </div>
+          <div class="version-pill">Version 2.0</div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /.page-wrapper -->
+
+<!-- ════════════════════════════════════════════════
+     TOAST NOTIFICATION CONTAINER
+     ════════════════════════════════════════════════ -->
+<div class="toast-container" id="toastContainer" aria-live="assertive" role="status"></div>
+
+<!-- ════════════════════════════════════════════════
+     JAVASCRIPT — CORE APPLICATION
+     Author  : محمد خماج
+     Version : 2.0
+     ════════════════════════════════════════════════ -->
+<script>
+  /* ============================================================
+     MODULE: Config
+     Application-wide constants
+     ============================================================ */
+  const CONFIG = Object.freeze({
+    DATA_SOURCE     : 'employees.json',
+    MIN_QUERY_LENGTH: 1,
+    LIST_PAGE       : 'list.html',
+    TOAST_DURATION  : 3500,  // ms
+  });
+
+  /* ============================================================
+     MODULE: State
+     Centralized mutable application state
+     ============================================================ */
+  const State = {
+    employees   : [],   // raw data from JSON
+    isLoading   : false,
+    lastQuery   : '',
+  };
+
+  /* ============================================================
+     MODULE: DOM References
+     Cache all DOM nodes once
+     ============================================================ */
+  const DOM = {
+    searchInput     : document.getElementById('searchInput'),
+    btnSearch       : document.getElementById('btnSearch'),
+    btnClear        : document.getElementById('btnClear'),
+    resultsContainer: document.getElementById('resultsContainer'),
+    resultsToolbar  : document.getElementById('resultsToolbar'),
+    resultsCountNum : document.getElementById('resultsCountNum'),
+    resultsQueryText: document.getElementById('resultsQueryText'),
+    statEmployees   : document.getElementById('statEmployees'),
+    statBranches    : document.getElementById('statBranches'),
+    statLists       : document.getElementById('statLists'),
+    toastContainer  : document.getElementById('toastContainer'),
+  };
+
+  /* ============================================================
+     MODULE: Utils
+     Pure helper functions
+     ============================================================ */
+  const Utils = {
+
+    /**
+     * Normalize Arabic text for consistent matching.
+     * Strips diacritics (tashkeel) and unifies alef variants.
+     */
+    normalizeArabic(text) {
+      if (!text) return '';
+      return text
+        .toString()
+        .trim()
+        .replace(/[أإآ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .replace(/[\u064B-\u065F]/g, '') // remove diacritics
+        .toLowerCase();
+    },
+
+
+    /**
+     * Build the list page URL preserving the original
+     * navigation contract: list.html?branch=X&list=Y
+     */
+    buildListUrl(branch, listNo) {
+      return `${CONFIG.LIST_PAGE}?branch=${encodeURIComponent(branch)}&list=${encodeURIComponent(listNo)}`;
+    },
+
+    /**
+     * Escape special HTML characters to prevent XSS
+     * when inserting dynamic content.
+     */
+    escapeHtml(str) {
+      const map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+      return String(str).replace(/[&<>"']/g, m => map[m]);
+    },
+
+  };
+
+  /* ============================================================
+     MODULE: Toast Notifications
+     ============================================================ */
+  const Toast = {
+
+    show(message, type = 'info', duration = CONFIG.TOAST_DURATION) {
+      const icons = {
+        success: 'fa-check-circle',
+        warning: 'fa-exclamation-triangle',
+        error  : 'fa-times-circle',
+        info   : 'fa-info-circle',
+      };
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.setAttribute('role', 'alert');
+      toast.innerHTML = `
+        <i class="fas ${icons[type] || icons.info}" aria-hidden="true"></i>
+        <span>${Utils.escapeHtml(message)}</span>
+      `;
+
+      DOM.toastContainer.appendChild(toast);
+
+      // Auto remove
+      setTimeout(() => {
+        toast.classList.add('fade-out');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+      }, duration);
+    },
+
+  };
+
+  /* ============================================================
+     MODULE: UI Renderer
+     All DOM mutation / HTML generation lives here
+     ============================================================ */
+  const Renderer = {
+
+    /**
+     * Show the animated loading spinner state.
+     */
+    showLoading() {
+      DOM.resultsContainer.innerHTML = `
+        <div class="state-container" role="status" aria-label="جاري التحميل">
+          <div class="state-icon-wrap loading">
+            <div class="spinner"></div>
+          </div>
+          <h2 class="state-title">جاري تحميل البيانات…</h2>
+          <p class="state-description">يتم الاتصال بمستودع البيانات والتحقق من السلامة.</p>
+        </div>
+      `;
+    },
+
+    /**
+     * Show idle / welcome state (initial load, no search yet).
+     */
+    showIdle() {
+      DOM.resultsContainer.innerHTML = `
+        <div class="state-container" id="idleState">
+          <div class="state-icon-wrap idle" aria-hidden="true">
+            <i class="fas fa-search"></i>
+          </div>
+          <h2 class="state-title">ابدأ البحث</h2>
+          <p class="state-description">
+            أدخل اسم الموظف، الرقم الوظيفي، أو رقم القائمة في حقل البحث أعلاه
+            للحصول على النتائج فورياً.
+          </p>
+        </div>
+      `;
+      this.hideToolbar();
+    },
+
+    /**
+     * Show no-results state.
+     */
+    showNoResults(query) {
+      DOM.resultsContainer.innerHTML = `
+        <div class="state-container">
+          <div class="state-icon-wrap no-result" aria-hidden="true">
+            <i class="fas fa-search-minus"></i>
+          </div>
+          <h2 class="state-title">لا توجد نتائج</h2>
+          <p class="state-description">
+            لم يتم العثور على أي سجل يطابق
+            "<strong>${Utils.escapeHtml(query)}</strong>".<br/>
+            حاول باستخدام كلمات مختلفة أو تأكد من صحة الرقم.
+          </p>
+        </div>
+      `;
+    },
+
+    /**
+     * Show data-fetch error state.
+     */
+    showError(message) {
+      DOM.resultsContainer.innerHTML = `
+        <div class="state-container">
+          <div class="state-icon-wrap error-state" aria-hidden="true">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h2 class="state-title">خطأ في تحميل البيانات</h2>
+          <p class="state-description">${Utils.escapeHtml(message)}</p>
+        </div>
+      `;
+      this.hideToolbar();
+    },
+
+    /**
+     * Render a list of matching employee records as cards.
+     */
+    renderResults(employees, query) {
+      if (!employees.length) {
+        this.showNoResults(query);
+        this.updateToolbar(0, query);
+        this.showToolbar();
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      employees.forEach(emp => {
+        const card = this.createCard(emp);
+        fragment.appendChild(card);
+      });
+
+      DOM.resultsContainer.innerHTML = '';
+      DOM.resultsContainer.appendChild(fragment);
+
+      this.updateToolbar(employees.length, query);
+      this.showToolbar();
+    },
+
+    /**
+     * Build a single result card DOM element.
+     */
+    createCard(emp) {
+      const listUrl = Utils.buildListUrl(emp.branch, emp.list_no);
+
+      const card = document.createElement('article');
+      card.className = 'result-card';
+      card.setAttribute('role', 'listitem');
+
+      card.innerHTML = `
+        <!-- Card Header -->
+        <div class="card-header">
+          <div class="card-avatar" aria-hidden="true">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="card-title-group">
+            <div class="card-name" title="${Utils.escapeHtml(emp.name)}">
+              ${Utils.escapeHtml(emp.name)}
+            </div>
+            <div class="card-id">
+              <i class="fas fa-id-badge" aria-hidden="true"></i>
+              <span>رقم وظيفي: <strong>${Utils.escapeHtml(String(emp.employee_id))}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+
+          <!-- Branch -->
+          <div class="card-field">
+            <div class="field-icon blue" aria-hidden="true">
+              <i class="fas fa-building"></i>
+            </div>
+            <div class="field-content">
+              <div class="field-label">الفرع</div>
+              <div class="field-value" title="${Utils.escapeHtml(emp.branch)}">
+                ${Utils.escapeHtml(emp.branch)}
+              </div>
+            </div>
+          </div>
+
+          <!-- Value -->
+          <div class="card-field">
+            <div class="field-icon green" aria-hidden="true">
+              <i class="fas fa-coins"></i>
+            </div>
+            <div class="field-content">
+              <div class="field-label">القيمة</div>
+              <div class="field-value">
+                ${Utils.escapeHtml(String(emp.value).replace(/\.0$/,''))} د.ل
+              </div>
+            </div>
+          </div>
 
         </div>
 
-        `;
+        <!-- Card Footer -->
+        <div class="card-footer">
+          <span class="list-badge" aria-label="رقم القائمة ${Utils.escapeHtml(String(emp.list_no))}">
+            <i class="fas fa-list-ol" aria-hidden="true"></i>
+            قائمة رقم: ${Utils.escapeHtml(String(emp.list_no))}
+          </span>
+          <a
+            href="${Utils.escapeHtml(listUrl)}"
+            class="btn-open-list"
+            aria-label="فتح قائمة رقم ${Utils.escapeHtml(String(emp.list_no))}"
+          >
+            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+            فتح القائمة
+          </a>
+        </div>
+      `;
 
-    }
+      return card;
+    },
 
-    resultsDiv.innerHTML = html;
+    /* ── Toolbar helpers ── */
 
-}
+    updateToolbar(count, query) {
+      DOM.resultsCountNum.textContent = count;
+      DOM.resultsQueryText.innerHTML  =
+        `نتائج البحث عن: <strong>"${Utils.escapeHtml(query)}"</strong>`;
+    },
 
-function search(){
+    showToolbar() {
+      DOM.resultsToolbar.classList.add('visible');
+    },
 
-    if(!loaded){
+    hideToolbar() {
+      DOM.resultsToolbar.classList.remove('visible');
+    },
 
-        resultsDiv.innerHTML =
-        '<div class="result">جاري تحميل البيانات...</div>';
+    /* ── Header stats ── */
 
+    updateStats(employees) {
+      const totalEmployees = employees.length;
+      const totalBranches  = new Set(employees.map(e => e.branch)).size;
+      const totalLists     = new Set(employees.map(e => `${e.branch}||${e.list_no}`)).size;
+
+      DOM.statEmployees.textContent = totalEmployees.toLocaleString('ar-EG');
+      DOM.statBranches.textContent  = totalBranches.toLocaleString('ar-EG');
+      DOM.statLists.textContent     = totalLists.toLocaleString('ar-EG');
+    },
+
+  };
+
+  /* ============================================================
+     MODULE: Search Engine
+     Core search / filter logic
+     ============================================================ */
+  const SearchEngine = {
+
+    /**
+     * Filter employee records against a query string.
+     * Searches across: name, employee_id, list_no.
+     */
+    filter(employees, query) {
+      const q = Utils.normalizeArabic(query);
+      if (!q) return [];
+
+      return employees.filter(emp => {
+        const name       = Utils.normalizeArabic(emp.name);
+        const employeeId = String(emp.employee_id).trim();
+        const listNo     = String(emp.list_no).trim();
+
+        return (
+          name.includes(q)       ||
+          employeeId.includes(q) ||
+          listNo.includes(q)
+        );
+      });
+    },
+
+  };
+
+  /* ============================================================
+     MODULE: Data Service
+     Responsible for fetching and caching the JSON data
+     ============================================================ */
+  const DataService = {
+
+    /**
+     * Fetch employees.json and populate State.employees.
+     * Updates the header stats on success.
+     */
+    async load() {
+      State.isLoading = true;
+      Renderer.showLoading();
+
+     try {
+  const response = await fetch(CONFIG.DATA_SOURCE);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} — تعذّر الاتصال بمصدر البيانات.`);
+        }
+
+        const raw = await response.json();
+
+        // Accept both a direct array and an object wrapper
+        State.employees = Array.isArray(raw)
+          ? raw
+          : (raw.employees || raw.data || []);
+
+        if (!State.employees.length) {
+          throw new Error('ملف البيانات فارغ أو بتنسيق غير مدعوم.');
+        }
+
+        Renderer.updateStats(State.employees);
+Renderer.showIdle();
+DOM.searchInput.focus();
+
+        Toast.show(`تم تحميل ${State.employees.length.toLocaleString('ar-EG')} سجل بنجاح`, 'success');
+
+      } catch (err) {
+        console.error('[DataService.load]', err);
+        Renderer.showError(err.message || 'حدث خطأ غير متوقع أثناء تحميل البيانات.');
+        Toast.show('فشل تحميل البيانات. يرجى التحقق من الاتصال.', 'error');
+      } finally {
+        State.isLoading = false;
+      }
+    },
+
+  };
+
+  /* ============================================================
+     MODULE: SearchController
+     Orchestrates search flow: input → filter → render
+     ============================================================ */
+  const SearchController = {
+
+    execute() {
+      const rawQuery = DOM.searchInput.value.trim();
+
+      // Guard: empty query
+      if (!rawQuery) {
+        Renderer.showIdle();
         return;
+      }
 
-    }
-
-    const keyword = searchInput.value.trim();
-
-    if(keyword === ''){
-
-        resultsDiv.innerHTML = '';
+      // Guard: data not yet loaded
+      if (State.isLoading) {
+        Toast.show('البيانات لا تزال تُحمَّل. يرجى الانتظار.', 'warning');
         return;
+      }
 
-    }
+      // Guard: no data
+      if (!State.employees.length) {
+        Toast.show('قاعدة البيانات فارغة.', 'error');
+        return;
+      }
 
-    const k = keyword.toLowerCase();
+      // Guard: minimum query length
+      if (rawQuery.length < CONFIG.MIN_QUERY_LENGTH) {
+        return;
+      }
 
-    const results = employees.filter(emp =>
+State.lastQuery = rawQuery;
 
-        (emp.name || '').toLowerCase().includes(k) ||
+const results = SearchEngine
+  .filter(State.employees, rawQuery)
+  .slice(0,100);
 
-        (emp.employee_id || '').includes(keyword) ||
+   Renderer.renderResults(results, rawQuery);
 
-        (emp.list_no || '').includes(keyword)
+},
 
-    ).slice(0,100);
+clear() {
+      DOM.searchInput.value = '';
+      State.lastQuery = '';
+      Renderer.showIdle();
+      DOM.searchInput.focus();
+    },
 
-    render(results);
+  };
 
-}
+  /* ============================================================
+     MODULE: EventBus
+     Registers all UI event listeners
+     ============================================================ */
+  const EventBus = {
 
-searchInput.addEventListener('keydown',function(e){
+    init() {
 
-    if(e.key === 'Enter'){
+DOM.searchInput.addEventListener('keydown', (e) => {
 
-        search();
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    SearchController.execute();
+  }
 
-    }
-
-    if(e.key === 'Escape'){
-
-        searchInput.value='';
-
-        resultsDiv.innerHTML='';
-
-    }
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    SearchController.clear();
+  }DOM.searchInput.value = '';
 
 });
+      // Search button
+      DOM.btnSearch.addEventListener('click', () => SearchController.execute());
+
+      // Clear button
+      DOM.btnClear.addEventListener('click', () => SearchController.clear());
+
+      // Keyboard shortcut: "/" focuses search field
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== DOM.searchInput) {
+          e.preventDefault();
+          DOM.searchInput.focus();
+          DOM.searchInput.select();
+        }
+      });
+    },
+
+  };
+
+  /* ============================================================
+     MODULE: App
+     Entry point — bootstraps the entire application
+     ============================================================ */
+  const App = {
+
+    async init() {
+      // Register events before data loads
+      EventBus.init();
+
+      // Load data
+      await DataService.load();
+    },
+
+  };
+
+  /* ── Bootstrap ── */
+  document.addEventListener('DOMContentLoaded', () => App.init());
 
 </script>
-
 </body>
 </html>
